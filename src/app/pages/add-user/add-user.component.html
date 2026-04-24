@@ -1,0 +1,88 @@
+<div style="padding: 24px">
+  <div style="display: flex; align-items: center; margin-bottom: 24px">
+
+    <ion-button
+      label="Voltar"
+      iconType="left"
+      type="ghost"
+      (ionOnClick)="goBack()"
+      ionTooltipTitle="Voltar para a listagem de usuários"
+    ></ion-button>
+
+    <h2 style="margin: 0 0 0 16px">Adicionar Novo Usuário</h2>
+  </div>
+
+  <ion-alert
+    *ngIf="showMessage"
+    [type]="messageConfig.type"
+    [message]="messageConfig.content"
+    [closable]="true"
+    style="margin-bottom: 16px"
+  >
+  </ion-alert>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" style="max-width: 600px">
+    <div style="margin-bottom: 16px">
+      <ion-input
+        [value]="form.get('name').value"
+        (valueChange)="form.get('name').setValue($event)"
+        placeholder="Digite o nome completo"
+        label="Nome Completo *"
+        [errorMsg]="
+          form.get('name').hasError('required') && form.get('name').touched
+            ? 'Nome é obrigatório'
+            : ''
+        "
+        [invalid]="form.get('name').invalid && form.get('name').touched"
+      >
+      </ion-input>
+    </div>
+
+    <div style="margin-bottom: 16px">
+      <ion-input
+        [value]="form.get('email').value"
+        (valueChange)="form.get('email').setValue($event)"
+        type="email"
+        placeholder="exemplo@email.com"
+        label="E-mail *"
+        [errorMsg]="
+          (form.get('email').hasError('required') ||
+            form.get('email').hasError('email')) &&
+          form.get('email').touched
+            ? 'E-mail inválido ou vazio'
+            : ''
+        "
+        [invalid]="form.get('email').invalid && form.get('email').touched"
+      >
+      </ion-input>
+    </div>
+
+    <div style="margin-bottom: 16px">
+      <ion-select
+        [required]="true"
+        (events)="onCompanySelected($event)"
+        placeholder="Selecione uma empresa"
+        [options]="companyOptions"
+      >
+      </ion-select>
+      <div
+        *ngIf="form.get('company').invalid && form.get('company').touched"
+        style="color: #e74c3c; font-size: 12px; margin-top: 4px"
+      >
+        Empresa é obrigatória.
+      </div>
+    </div>
+
+    <div style="margin-bottom: 24px; display: flex; align-items: center">
+      <ion-checkbox
+        (ionClick)="toggleSendInvite()"
+        label="Deseja enviar convite por e-mail?"
+      >
+      </ion-checkbox>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end">
+      <ion-button label="Salvar" type="primary"></ion-button>
+    </div>
+  </form>
+</div>

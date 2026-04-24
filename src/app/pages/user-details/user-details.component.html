@@ -1,0 +1,90 @@
+<div style="padding: 24px;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+
+    <div style="display: flex; align-items: center;">
+      <ion-button
+        label="Voltar"
+        type="ghost"
+        (ionOnClick)="goBack()"
+        ionTooltipTitle="Voltar para a listagem">
+      </ion-button>
+      <h2 style="margin: 0 0 0 16px;">Detalhes do Usuário</h2>
+    </div>
+
+    <span
+      ionPopConfirm
+      ionPopConfirmTitle="Tem certeza que deseja excluir?"
+      ionConfirmText="Sim"
+      ionCancelText="Não"
+      (ionOnConfirm)="deleteUser()"
+      style="cursor: pointer; display: inline-block;">
+
+      <ion-button
+        label="Excluir Usuário"
+        type="secondary"
+        iconType="trash"
+        style="pointer-events: none;"> </ion-button>
+
+    </span>
+
+  </div>
+
+  <div *ngIf="loading" style="text-align: center; padding: 48px;">
+    <ion-spinner size="md" color="primary"></ion-spinner>
+    <p style="margin-top: 16px; color: #666;">Carregando...</p>
+  </div>
+
+  <div *ngIf="error" style="text-align: center; padding: 48px;">
+    <p>Erro ao carregar dados do usuário.</p>
+    <ion-button label="Tentar Novamente" type="primary" (ionOnClick)="ngOnInit()"></ion-button>
+  </div>
+
+  <div *ngIf="!loading && !error && user">
+
+    <div style="margin-bottom: 16px;">
+      <ion-tag [label]="'ID: ' + user.id" status="info"></ion-tag>
+    </div>
+
+    <ion-card [configuration]="cardConfig"></ion-card>
+
+    <div style="background: #fff; padding: 16px; border: 1px solid #eaeaea; border-top: none; border-radius: 0 0 4px 4px; margin-bottom: 32px;">
+      <p><strong>Contato:</strong> {{ user.phone || 'Não informado' }}</p>
+      <p><strong>Website:</strong> {{ user.website || 'Não informado' }}</p>
+      <hr style="margin: 12px 0; border: 0; border-top: 1px solid #eee;">
+      <p><strong>Endereço:</strong><br>
+         {{ user.address?.street }}, {{ user.address?.city }}<br>
+         CEP: {{ user.address?.zipcode }}
+      </p>
+    </div>
+
+    <hr style="border: 1px solid #eaeaea; margin-bottom: 24px;">
+
+    <div *ngIf="accordionItems.length > 0; else noPosts">
+      <h3 style="margin-bottom: 16px;">Postagens ({{ posts.length }})</h3>
+
+      <ion-accordion
+        [accordions]="accordionItems"
+        [templateHeader]="postHeaderTemplate"
+        [templateBody]="postBodyTemplate">
+      </ion-accordion>
+
+      <ng-template #postHeaderTemplate let-item>
+        <div style="padding: 16px; font-weight: bold; font-size: 16px; color: #333;">
+          {{ item.name }}
+        </div>
+      </ng-template>
+
+      <ng-template #postBodyTemplate let-item>
+        <div style="padding: 16px; color: #4a4a4a; background: #fafafa; border-radius: 4px;">
+          <p style="margin: 0;">{{ item.bodyText }}</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <ng-template #noPosts>
+      <ion-no-data label="Este usuário não possui postagens registradas." iconType="info"></ion-no-data>
+    </ng-template>
+
+  </div>
+</div>

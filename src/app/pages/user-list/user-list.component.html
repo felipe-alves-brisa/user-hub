@@ -1,0 +1,35 @@
+<div style="padding: 24px;">
+  <h2>Lista de Usuários</h2>
+
+  <div *ngIf="error" style="text-align: center; padding: 48px;">
+    <p>Erro ao carregar usuários.</p>
+    <ion-button label="Tentar Novamente" type="primary" (ionOnClick)="fetchUsers()"></ion-button>
+  </div>
+
+  <div *ngIf="loading" style="text-align: center; padding: 48px;">
+    <ion-spinner size="md" color="primary"></ion-spinner>
+    <p style="margin-top: 16px; color: #666;">Carregando...</p>
+  </div>
+
+  <div *ngIf="!loading && !error && allUsers.length === 0" style="text-align: center; padding: 48px;">
+    <ion-no-data label="Nenhum usuário encontrado" iconType="info"></ion-no-data>
+  </div>
+
+  <div *ngIf="!loading && !error && allUsers.length > 0">
+
+    <ion-table
+      [config]="tableConfig"
+      (events)="onTableEvents($event)">
+    </ion-table>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+      <ion-pagination
+        [total]="paginationConfig.total"
+        [itemsPerPage]="paginationConfig.itemsPerPage"
+        [page]="paginationConfig.page"
+        (events)="onPaginationEvents($event)">
+      </ion-pagination>
+    </div>
+
+  </div>
+</div>
