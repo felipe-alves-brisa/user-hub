@@ -34,7 +34,9 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.form);
+  }
 
   onSubmit() {
     this.form.get("name")!.markAsTouched();

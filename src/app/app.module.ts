@@ -10,11 +10,25 @@ import { AddUserComponent } from "./pages/add-user/add-user.component";
 import { UserDetailsComponent } from "./pages/user-details/user-details.component";
 
 import {
+  IonAccordionModule,
+  IonAlertModule,
+  IonButtonModule,
+  IonCardModule,
+  IonCheckboxModule,
+  IonInputModule,
+  IonModalModule,
   IonModule,
   IonNoDataModule,
+  IonNotificationModule,
+  IonPaginationModule,
+  IonSelectModule,
   IonSidebarModule,
+  IonSpinnerModule,
+  IonTableModule,
+  IonTagModule,
   ionThemeInitializer,
 } from "@brisanet/ion";
+import { UserModalComponent } from "./pages/user-list/user-modal/user-modal.component";
 
 @NgModule({
   declarations: [
@@ -23,17 +37,32 @@ import {
     UserListComponent,
     AddUserComponent,
     UserDetailsComponent,
+    UserModalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     IonModule,
+    IonButtonModule,
     ReactiveFormsModule,
     IonSidebarModule,
     IonNoDataModule,
+    IonSpinnerModule,
+    IonTableModule,
+    IonPaginationModule,
+    IonAlertModule,
+    IonInputModule,
+    IonSelectModule,
+    IonCheckboxModule,
+    IonTagModule,
+    IonCardModule,
+    IonAccordionModule,
+    IonModalModule,
+    IonNotificationModule
   ],
   providers: [ionThemeInitializer()],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent], 
+  entryComponents: [UserModalComponent]
 })
 export class AppModule {}

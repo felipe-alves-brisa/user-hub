@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { UserService, User } from "../../services/user.service";
 import { Router } from "@angular/router";
+import { IonModalService, IonNotificationService } from "@brisanet/ion";
+import { UserModalComponent } from "./user-modal/user-modal.component";
 
 @Component({
   selector: "app-user-list",
@@ -38,8 +40,8 @@ export class UserListComponent implements OnInit {
     ],
     actions: [
       {
-        label: "Ver Detalhes",
-        icon: "eye",
+        label: "Editar",
+        icon: "pencil",
         call: (row: User) => this.viewDetails(row),
         tooltip: "Visualizar detalhes do usuário",
       },
@@ -61,6 +63,8 @@ export class UserListComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
+    private modalService: IonModalService,
+    private notificationService: IonNotificationService
   ) {}
 
   ngOnInit() {
@@ -139,7 +143,37 @@ export class UserListComponent implements OnInit {
   }
 
   viewDetails(user: any) {
-    this.router.navigate(["/users", user.id]);
+    this.modalService
+      .open(UserModalComponent, {
+        title: `Editar usuário: ${user.name}`,
+        width: 640,
+        ionParams: { user },
+        footer: {
+          hide: true,
+        },
+      })
+      .subscribe({
+        next: (response: any) => {
+          if (response && response.editedUser) {
+            const editedUser = response.editedUser as User;
+            const index = this.allUsers.findIndex((u) => u.id === editedUser.id);
+            if (index >= 0) {
+              this.allUsers[index] = {
+                ...editedUser,
+                "company.name": editedUser.company && editedUser.company.name ? editedUser.company.name : "",
+              };
+            }
+            this.updateTableData();
+            this.notificationService.success(
+              "Usuário editado",
+              "Os dados do usuário foram atualizados com sucesso."
+            );
+          }
+        },
+        error: (err) => {
+          console.error("Erro ao abrir modal de edição:", err);
+        },
+      });
   }
 
   deleteUser(user: any) {

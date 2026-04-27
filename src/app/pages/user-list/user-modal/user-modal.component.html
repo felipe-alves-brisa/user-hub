@@ -1,0 +1,63 @@
+<div style="padding: 24px; max-width: 640px;">
+    <div style="margin-bottom: 24px;">
+        <p style="margin: 0; color: #666; font-size: 14px;">
+            Atualize o nome, e-mail ou empresa e salve as alterações.
+        </p>
+    </div>
+
+    <form [formGroup]="form" style="display: grid; gap: 16px;">
+        
+        <ion-input 
+            [value]="name.value" 
+            (valueChange)="name.setValue($event)"
+            placeholder="Digite o nome completo" 
+            label="Nome" 
+            [errorMsg]="name.hasError('required') && name.touched ? 'Nome é obrigatório' : ''" 
+            [invalid]="name.invalid && name.touched">
+        </ion-input>
+
+        <ion-input 
+            [value]="email.value" 
+            (valueChange)="email.setValue($event)" 
+            type="email"
+            placeholder="exemplo@email.com" 
+            label="E-mail" 
+            [errorMsg]="(email.hasError('required') || email.hasError('email')) && email.touched ? 'E-mail inválido ou vazio' : ''" 
+            [invalid]="email.invalid && email.touched">
+        </ion-input>
+
+        <ion-input 
+            [value]="companyName.value" 
+            (valueChange)="companyName.setValue($event)"
+            placeholder="Nome da empresa" 
+            label="Empresa" 
+            [errorMsg]="companyName.hasError('required') && companyName.touched ? 'Empresa é obrigatória' : ''" 
+            [invalid]="companyName.invalid && companyName.touched">
+        </ion-input>
+
+        <ion-input 
+            [value]="phone.value" 
+            (valueChange)="phone.setValue($event)"
+            placeholder="Telefone" 
+            label="Telefone">
+        </ion-input>
+
+        <ion-input 
+            [value]="website.value" 
+            (valueChange)="website.setValue($event)"
+            placeholder="Website" 
+            label="Website">
+        </ion-input>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px;">
+            <ion-button label="Cancelar" type="secondary" (ionOnClick)="cancel()"></ion-button>
+            
+            <ion-button 
+                label="Salvar" 
+                type="primary" 
+                [disabled]="form.invalid"
+                (ionOnClick)="save()">
+            </ion-button>
+        </div>
+    </form>
+</div>
