@@ -1,16 +1,20 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { IonModule, IonSidebarModule } from '@brisanet/ion';
-import { HomeComponent } from './pages/home/home.component';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { HomeComponent } from "./pages/home/home.component";
+import { ReactiveFormsModule } from "@angular/forms";
+import { UserListComponent } from "./pages/user-list/user-list.component";
+import { AddUserComponent } from "./pages/add-user/add-user.component";
+import { UserDetailsComponent } from "./pages/user-details/user-details.component";
 
-// Importação no topo
-import { ReactiveFormsModule } from '@angular/forms';
-import { UserListComponent } from './pages/user-list/user-list.component';
-import { AddUserComponent } from './pages/add-user/add-user.component';
-import { UserDetailsComponent } from './pages/user-details/user-details.component';
+import {
+  IonModule,
+  IonNoDataModule,
+  IonSidebarModule,
+  ionThemeInitializer,
+} from "@brisanet/ion";
 
 @NgModule({
   declarations: [
@@ -18,7 +22,7 @@ import { UserDetailsComponent } from './pages/user-details/user-details.componen
     HomeComponent,
     UserListComponent,
     AddUserComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,9 +30,10 @@ import { UserDetailsComponent } from './pages/user-details/user-details.componen
     HttpClientModule,
     IonModule,
     ReactiveFormsModule,
-    IonSidebarModule
+    IonSidebarModule,
+    IonNoDataModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [ionThemeInitializer()],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
