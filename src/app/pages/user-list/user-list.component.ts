@@ -143,8 +143,6 @@ export class UserListComponent implements OnInit {
   }
 
   goToDetails(user: any) {
-    // Verifique se o caminho da sua rota é exatamente "/users/id" no AppRoutingModule
-    // Se for algo como "/user-details/id", basta trocar abaixo.
     this.router.navigate(["/users", user.id]);
   }
 
