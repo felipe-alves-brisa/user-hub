@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit {
         type: "link",
         link: {
           label: (row: any) => row.name,
-          action: (row: any) => this.viewDetails(row)
+          action: (row: any) => this.goToDetails(row)
         },
       },
       { key: "email", label: "E-mail", sort: true },
@@ -42,8 +42,8 @@ export class UserListComponent implements OnInit {
       {
         label: "Editar",
         icon: "pencil",
-        call: (row: User) => this.viewDetails(row),
-        tooltip: "Visualizar detalhes do usuário",
+        call: (row: User) => this.editUser(row),
+        tooltip: "Editar usuário",
       },
       {
         label: "Excluir",
@@ -102,7 +102,7 @@ export class UserListComponent implements OnInit {
   onTableEvents(event: any): void {
     console.log("Evento da tabela:", event);
     if (event.event === "row_click") {
-      this.viewDetails(event.row);
+      this.goToDetails(event.row);
     }
 
     if (event.event === "change_page") {
@@ -142,7 +142,13 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  viewDetails(user: any) {
+  goToDetails(user: any) {
+    // Verifique se o caminho da sua rota é exatamente "/users/id" no AppRoutingModule
+    // Se for algo como "/user-details/id", basta trocar abaixo.
+    this.router.navigate(["/users", user.id]);
+  }
+
+  editUser(user: any) {
     this.modalService
       .open(UserModalComponent, {
         title: `Editar usuário: ${user.name}`,
