@@ -1,8 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { UserService, User } from "../../services/user.service";
 import { Router } from "@angular/router";
 import { IonModalService, IonNotificationService } from "@brisanet/ion";
+import { UserService } from "../../services/user.service";
+import { User } from "../../models/user.model";
 import { UserModalComponent } from "./user-modal/user-modal.component";
+
+type UserTableRow = User & { "company.name": string };
 
 @Component({
   selector: "app-user-list",
@@ -10,19 +13,18 @@ import { UserModalComponent } from "./user-modal/user-modal.component";
   styleUrls: ["./user-list.component.css"],
 })
 export class UserListComponent implements OnInit {
-  allUsers: any[] = []; // Guarda todos os usuários da API
+  allUsers: UserTableRow[] = [];
   loading = true;
   error = false;
 
-  // Controle de paginação isolado (separado da tabela)
   paginationConfig = {
     total: 0,
-    itemsPerPage: 5, // Mudado para 5 para conseguirmos ver a paginação funcionando com os 10 usuários da API
+    itemsPerPage: 5,
     page: 1,
   };
 
   tableConfig: any = {
-    data: [], // Os dados que realmente aparecem na tela (fatiados)
+    data: [],
     loading: true,
     columns: [
       {
@@ -31,8 +33,8 @@ export class UserListComponent implements OnInit {
         sort: true,
         type: "link",
         link: {
-          label: (row: any) => row.name,
-          action: (row: any) => this.goToDetails(row)
+          label: (row: UserTableRow) => row.name,
+          action: (row: UserTableRow) => this.goToDetails(row),
         },
       },
       { key: "email", label: "E-mail", sort: true },
@@ -42,7 +44,7 @@ export class UserListComponent implements OnInit {
       {
         label: "Editar",
         icon: "pencil",
-        call: (row: User) => this.editUser(row),
+        call: (row: UserTableRow) => this.editUser(row),
         tooltip: "Editar usuário",
       },
       {
@@ -55,7 +57,7 @@ export class UserListComponent implements OnInit {
           confirmText: "Sim, excluir",
           cancelText: "Cancelar",
         },
-        call: (row: User) => this.deleteUser(row),
+        call: (row: UserTableRow) => this.deleteUser(row),
       },
     ],
   };
@@ -64,7 +66,7 @@ export class UserListComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private modalService: IonModalService,
-    private notificationService: IonNotificationService
+    private notificationService: IonNotificationService,
   ) {}
 
   ngOnInit() {
@@ -77,22 +79,15 @@ export class UserListComponent implements OnInit {
 
     this.userService.getUsers().subscribe({
       next: (data) => {
-        // Salva os dados processados na variável original
         this.allUsers = data.map((user) => ({
           ...user,
           "company.name": user.company.name,
         }));
-
-        // Atualiza o total da paginação
         this.paginationConfig.total = this.allUsers.length;
-
-        // Renderiza a primeira página
         this.updateTableData();
-
         this.loading = false;
       },
-      error: (err) => {
-        console.error("Erro ao carregar usuários:", err);
+      error: () => {
         this.error = true;
         this.loading = false;
       },
@@ -100,7 +95,6 @@ export class UserListComponent implements OnInit {
   }
 
   onTableEvents(event: any): void {
-    console.log("Evento da tabela:", event);
     if (event.event === "row_click") {
       this.goToDetails(event.row);
     }
@@ -117,13 +111,11 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  // Função responsável por fatiar os dados baseados na página atual
   updateTableData() {
     const startIndex =
       (this.paginationConfig.page - 1) * this.paginationConfig.itemsPerPage;
     const endIndex = startIndex + this.paginationConfig.itemsPerPage;
 
-    // Atualiza apenas os dados visíveis na tabela com base na página
     this.tableConfig = {
       ...this.tableConfig,
       data: this.allUsers.slice(startIndex, endIndex),
@@ -131,9 +123,7 @@ export class UserListComponent implements OnInit {
     };
   }
 
-  // Evento disparado pelo <ion-pagination>
   onPaginationEvents(event: any): void {
-    // O evento da paginação isolada costuma devolver o objeto direto com { actual, itemsPerPage, offset }
     const newPage = event.actual || event.page;
 
     if (newPage && newPage !== this.paginationConfig.page) {
@@ -142,11 +132,11 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  goToDetails(user: any) {
+  goToDetails(user: UserTableRow) {
     this.router.navigate(["/users", user.id]);
   }
 
-  editUser(user: any) {
+  editUser(user: UserTableRow) {
     this.modalService
       .open(UserModalComponent, {
         title: `Editar usuário: ${user.name}`,
@@ -160,32 +150,38 @@ export class UserListComponent implements OnInit {
         next: (response: any) => {
           if (response && response.editedUser) {
             const editedUser = response.editedUser as User;
-            const index = this.allUsers.findIndex((u) => u.id === editedUser.id);
+            const index = this.allUsers.findIndex(
+              (u) => u.id === editedUser.id,
+            );
             if (index >= 0) {
               this.allUsers[index] = {
                 ...editedUser,
-                "company.name": editedUser.company && editedUser.company.name ? editedUser.company.name : "",
+                "company.name":
+                  editedUser.company && editedUser.company.name
+                    ? editedUser.company.name
+                    : "",
               };
             }
             this.updateTableData();
             this.notificationService.success(
               "Usuário editado",
-              "Os dados do usuário foram atualizados com sucesso."
+              "Os dados do usuário foram atualizados com sucesso.",
             );
           }
         },
-        error: (err) => {
-          console.error("Erro ao abrir modal de edição:", err);
+        error: () => {
+          this.notificationService.error(
+            "Erro",
+            "Não foi possível abrir o modal de edição.",
+          );
         },
       });
   }
 
-  deleteUser(user: any) {
-    // Deleta do array original
-    this.allUsers = this.allUsers.filter((u: any) => u.id !== user.id);
+  deleteUser(user: UserTableRow) {
+    this.allUsers = this.allUsers.filter((u) => u.id !== user.id);
     this.paginationConfig.total = this.allUsers.length;
 
-    // Boa prática: Se o usuário deletar o último item da página atual, voltamos uma página
     const maxPages = Math.ceil(
       this.paginationConfig.total / this.paginationConfig.itemsPerPage,
     );
@@ -193,7 +189,6 @@ export class UserListComponent implements OnInit {
       this.paginationConfig.page = maxPages;
     }
 
-    // Re-renderiza a tabela
     this.updateTableData();
   }
 }

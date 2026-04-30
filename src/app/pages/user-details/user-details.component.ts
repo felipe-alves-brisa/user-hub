@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { UserService, User, Post } from "../../services/user.service";
 import { forkJoin } from "rxjs";
+import { UserService } from "../../services/user.service";
+import { User, Post } from "../../models/user.model";
 
 @Component({
   selector: "app-user-details",
@@ -9,13 +10,11 @@ import { forkJoin } from "rxjs";
   styleUrls: ["./user-details.component.css"],
 })
 export class UserDetailsComponent implements OnInit {
-  user: any;
+  user: User | undefined;
   accordionItems: any[] = [];
   posts: Post[] = [];
   loading = true;
   error = false;
-
-  // 1. Criamos a variável que vai guardar a configuração do card
   cardConfig: any;
 
   constructor(
@@ -45,23 +44,20 @@ export class UserDetailsComponent implements OnInit {
       next: ([user, posts]) => {
         this.user = user;
         this.posts = posts;
-
-        // 2. Montamos o objeto de configuração do ion-card com o nome do usuário
         this.cardConfig = {
           header: {
-            title: user.name
-          }
+            title: user.name,
+          },
         };
 
-        this.accordionItems = posts.map(post => ({
+        this.accordionItems = posts.map((post) => ({
           name: post.title,
-          bodyText: post.body
+          bodyText: post.body,
         }));
 
         this.loading = false;
       },
-      error: (err) => {
-        console.error("Erro ao carregar dados:", err);
+      error: () => {
         this.error = true;
         this.loading = false;
       },
@@ -69,12 +65,9 @@ export class UserDetailsComponent implements OnInit {
   }
 
   deleteUser() {
-    // Esse alert vai provar que o popconfirm funcionou!
-    alert("Usuário excluído com sucesso!");
-
-    console.log("Usuário excluído com sucesso no console!");
     this.router.navigate(["/users"]);
   }
+
   goBack() {
     this.router.navigate(["/users"]);
   }
