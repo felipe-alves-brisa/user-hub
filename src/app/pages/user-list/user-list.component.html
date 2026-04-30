@@ -1,17 +1,17 @@
 <div style="padding: 24px;">
   <h2>Lista de Usuários</h2>
 
-  <div *ngIf="error" style="text-align: center; padding: 48px;">
+  <div *ngIf="error">
     <p>Erro ao carregar usuários.</p>
     <ion-button label="Tentar Novamente" type="primary" (ionOnClick)="fetchUsers()"></ion-button>
   </div>
 
-  <div *ngIf="loading" style="text-align: center; padding: 48px;">
+  <div *ngIf="loading">
     <ion-spinner size="md" color="primary"></ion-spinner>
   </div>
 
-  <div *ngIf="!loading && !error && allUsers.length === 0" style="text-align: center; padding: 48px;">
-    <ion-no-data label="Nenhum usuário encontrado" icon="user"></ion-no-data>
+  <div *ngIf="!loading && !error && allUsers.length === 0">
+    <ion-no-data label="Nenhum usuário encontrado" iconType="exclamation-rounded"></ion-no-data>
   </div>
 
   <div *ngIf="!loading && !error && allUsers.length > 0">
