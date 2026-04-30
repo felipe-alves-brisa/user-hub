@@ -1,21 +1,20 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-
-import { HomeComponent } from './pages/home/home.component';
-import { UserListComponent } from './pages/user-list/user-list.component';
-import { AddUserComponent } from './pages/add-user/add-user.component';
-import { UserDetailsComponent } from './pages/user-details/user-details.component';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'users', component: UserListComponent },
-  { path: 'users/add', component: AddUserComponent },
-  { path: 'users/:id', component: UserDetailsComponent }
+  {
+    path: "",
+    loadChildren: "./pages/home/home.module#HomeModule",
+    pathMatch: "full",
+  },
+  {
+    path: "users",
+    loadChildren: "./pages/users/users.module#UsersModule",
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
