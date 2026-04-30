@@ -1,0 +1,68 @@
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
+import {
+  IonAccordionModule,
+  IonAlertModule,
+  IonButtonModule,
+  IonCardModule,
+  IonCheckboxModule,
+  IonInputModule,
+  IonModalModule,
+  IonModule,
+  IonNoDataModule,
+  IonNotificationModule,
+  IonPaginationModule,
+  IonSelectModule,
+  IonSidebarModule,
+  IonSpinnerModule,
+  IonTableModule,
+  IonTagModule,
+} from "@brisanet/ion";
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    IonModule,
+    IonButtonModule,
+    IonSidebarModule,
+    IonNoDataModule,
+    IonSpinnerModule,
+    IonTableModule,
+    IonPaginationModule,
+    IonAlertModule,
+    IonInputModule,
+    IonSelectModule,
+    IonCheckboxModule,
+    IonTagModule,
+    IonCardModule,
+    IonAccordionModule,
+    IonModalModule,
+    IonNotificationModule,
+  ],
+  exports: [
+    CommonModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    IonModule,
+    IonButtonModule,
+    IonSidebarModule,
+    IonNoDataModule,
+    IonSpinnerModule,
+    IonTableModule,
+    IonPaginationModule,
+    IonAlertModule,
+    IonInputModule,
+    IonSelectModule,
+    IonCheckboxModule,
+    IonTagModule,
+    IonCardModule,
+    IonAccordionModule,
+    IonModalModule,
+    IonNotificationModule,
+  ],
+})
+export class SharedModule {}
