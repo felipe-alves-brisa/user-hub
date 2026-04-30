@@ -16,7 +16,7 @@ export class AddUserComponent implements OnInit {
     content: "",
   };
 
-  companyOptions = [
+  companyOptions: Array<{ label: string; value: string; selected: boolean }> = [
     { label: "Empresa A", value: "empresa_a", selected: false },
     { label: "Empresa B", value: "empresa_b", selected: false },
     { label: "Outra", value: "outra", selected: false },
@@ -34,14 +34,10 @@ export class AddUserComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    console.log(this.form);
-  }
+  ngOnInit() {}
 
   onSubmit() {
-    this.form.get("name")!.markAsTouched();
-    this.form.get("email")!.markAsTouched();
-    this.form.get("company")!.markAsTouched();
+    this.form.markAllAsTouched();
 
     if (this.form.invalid) {
       this.messageConfig = {
@@ -52,8 +48,6 @@ export class AddUserComponent implements OnInit {
       return;
     }
 
-    // Simulate save
-    console.log("Dados do formulário:", this.form.value);
     this.messageConfig = {
       type: "success",
       content: "Usuário salvo com sucesso!",
@@ -71,11 +65,15 @@ export class AddUserComponent implements OnInit {
 
   onCompanySelected(selectedOptions: any) {
     const selectedOption =
-      selectedOptions && selectedOptions.length > 0 ? selectedOptions[0] : null;
+      Array.isArray(selectedOptions) && selectedOptions.length > 0
+        ? selectedOptions[0]
+        : null;
+
     this.companyOptions = this.companyOptions.map((option) => ({
       ...option,
       selected: !!selectedOption && option.value === selectedOption.value,
     }));
+
     this.form
       .get("company")!
       .setValue(selectedOption ? selectedOption.value : "");
